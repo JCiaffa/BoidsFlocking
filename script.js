@@ -1,9 +1,8 @@
 let flock;
 let radius;
-
-let radiusCoefficients = [0.7, 0.85, 1, 1.15, 1.3];
+let radiusCoefficients = [0.65, 0.8, 1, 1.25, 1.75];
 let colors = ["#f89c44", "#ef6085", "#f0ba45", "#cd5fa1"];
-let boidsCount = 25;
+let boidsCount = 12;
 var boidsCanvas = document.getElementById("boidsCanvas");
 var boidsCanvasInfo = boidsCanvas.getBoundingClientRect();
 
@@ -66,11 +65,16 @@ function setup() {
     Utils.elementHeight(p5Div)
   );
   p5Canvas.parent(p5Div);
+  startingx = boidsCanvasInfo.width / 2 - 75;
+  startingy = boidsCanvasInfo.height / 2 - 75;
 
+  cheight = boidsCanvasInfo.height;
   flock = new Flock();
   for (let i = 0; i < boidsCount; i++) {
+    cwidth = boidsCanvasInfo.width;
+    cheight = boidsCanvasInfo.height;
     //   initial boid positioning
-    let b = new Boid(50, 50);
+    let b = new Boid(startingx, startingy);
     flock.addBoid(b);
   }
 
@@ -135,7 +139,7 @@ Boid.prototype.flock = function (boids) {
   let coh = this.cohesion(boids); // Cohesion
   // Arbitrarily weight these forces
   sep.mult(8);
-  ali.mult(1.5);
+  ali.mult(1.1);
   coh.mult(1);
   // Add the force vectors to acceleration
   this.applyForce(sep);
@@ -158,6 +162,7 @@ Boid.prototype.update = function () {
 // STEER = DESIRED MINUS VELOCITY
 Boid.prototype.seek = function (target) {
   let desired = p5.Vector.sub(target, this.position); // A vector pointing from the location to the target
+
   // Normalize desired and scale to maximum speed
   desired.normalize();
   desired.mult(this.maxspeed);
@@ -208,7 +213,7 @@ Boid.prototype.borders = function () {
 
 // Separation
 Boid.prototype.separate = function (boids) {
-  let desiredseparation = 25.0;
+  let desiredseparation = 25;
   let steer = createVector(0, 0);
   let count = 0;
   // For every boid in the system, check if it's too close
@@ -267,7 +272,7 @@ Boid.prototype.align = function (boids) {
 // Cohesion
 // For the average location (i.e. center) of all nearby boids, calculate steering vector towards that location
 Boid.prototype.cohesion = function (boids) {
-  let neighbordist = 50;
+  let neighbordist = 75;
   let sum = createVector(0, 0); // Start with empty vector to accumulate all locations
   let count = 0;
   for (let i = 0; i < boids.length; i++) {
