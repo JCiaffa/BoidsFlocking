@@ -2,7 +2,7 @@ let flock;
 let radius;
 let radiusCoefficients = [0.65, 0.8, 1, 1.25, 1.75];
 let colors = ["#f89c44", "#ef6085", "#f0ba45", "#cd5fa1"];
-let boidsCount = 12;
+let boidsCount = 25;
 var boidsCanvas = document.getElementById("boidsCanvas");
 var boidsCanvasInfo = boidsCanvas.getBoundingClientRect();
 
