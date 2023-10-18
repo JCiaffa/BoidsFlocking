@@ -3,3 +3,16 @@
   height: 100vh;
   background-color: black;
 }
+
+/* If you want to add controls */
+/* #boidsCanvas {
+  width: 100vw;
+  height: calc(100vh - 250px);
+  background-color: black;
+} */
+
+/* #controls {
+  width: 100vw;
+  height: 250px;
+  background-color: pink;
+} */

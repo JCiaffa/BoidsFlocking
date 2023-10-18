@@ -2,10 +2,9 @@ let flock;
 let radius;
 let radiusCoefficients = [0.65, 0.8, 1, 1.25, 1.75];
 let colors = ["#f89c44", "#ef6085", "#f0ba45", "#cd5fa1"];
-let boidsCount = 25;
+let boidsCount = 50;
 var boidsCanvas = document.getElementById("boidsCanvas");
 var boidsCanvasInfo = boidsCanvas.getBoundingClientRect();
-
 var size = {
   width: boidsCanvasInfo.width,
   height: boidsCanvasInfo.height,
@@ -59,6 +58,8 @@ function setup() {
       );
     }
   }
+
+  // Create Canvas
   p5Div = document.getElementById("boidsCanvas");
   const p5Canvas = createCanvas(
     Utils.elementWidth(p5Div),
@@ -67,7 +68,6 @@ function setup() {
   p5Canvas.parent(p5Div);
   startingx = boidsCanvasInfo.width / 2 - 75;
   startingy = boidsCanvasInfo.height / 2 - 75;
-
   cheight = boidsCanvasInfo.height;
   flock = new Flock();
   for (let i = 0; i < boidsCount; i++) {
@@ -116,8 +116,8 @@ function Boid(x, y) {
   this.fillColor = randomColor(colors);
   this.r = radius * radiusCoefficient(radiusCoefficients);
   this.mass = (4 / 3) * Math.PI * Math.pow(this.r, 3);
-  this.maxspeed = 1.75; // Maximum speed 1.75
-  this.maxforce = 0.03; // Maximum steering force
+  this.maxspeed = 2; // Maximum speed 1.75
+  this.maxforce = 0.03; // Maximum steering force 0.03
 }
 
 Boid.prototype.run = function (boids) {
@@ -137,10 +137,11 @@ Boid.prototype.flock = function (boids) {
   let sep = this.separate(boids); // Separation
   let ali = this.align(boids); // Alignment
   let coh = this.cohesion(boids); // Cohesion
+
   // Arbitrarily weight these forces
   sep.mult(8);
-  ali.mult(1.1);
-  coh.mult(1);
+  ali.mult(0.5);
+  coh.mult(0.5);
   // Add the force vectors to acceleration
   this.applyForce(sep);
   this.applyForce(ali);
@@ -207,13 +208,12 @@ Boid.prototype.borders = function () {
   if (this.position.y > height / 2 - this.r - buffer - 1) {
     this.position.y -= bump;
   }
-
   //  prevent sticking
 };
 
 // Separation
 Boid.prototype.separate = function (boids) {
-  let desiredseparation = 25;
+  let desiredseparation = 20;
   let steer = createVector(0, 0);
   let count = 0;
   // For every boid in the system, check if it's too close
